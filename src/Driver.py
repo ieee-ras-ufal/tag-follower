@@ -5,11 +5,11 @@ class Driver:
     BASE_PIN = 17
     TILT_PIN = 27
 
-    base_limits = [0, 0]
-    tilt_limits = [0, 0]
+    base_limits = [1100, 1900]
+    tilt_limits = [1300, 2000]
 
-    base_angles = [0, 0]
-    tilt_angles = [0, 0]
+    base_angles = [-45, 45]
+    tilt_angles = [-30, 30]
 
     def __mapping(self, value, anglesLimits, limits):
         span = anglesLimits[1] - anglesLimits[0]
