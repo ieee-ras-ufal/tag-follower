@@ -31,10 +31,13 @@ class Driver:
         self.pi.set_servo_pulsewidth(self.BASE_PIN, theta1)
         self.pi.set_servo_pulsewidth(self.TILT_PIN, theta2)
 
-    def __init__(self):
+    def __init__(self, theta = [0., 0.]):
         self.pi = pigpio.pi()
         self.pi.set_mode(self.BASE_PIN, pigpio.OUTPUT)
         self.pi.set_mode(self.TILT_PIN, pigpio.OUTPUT)
-
+        
+        self.set_theta(theta)
+        
     def closeConn(self):
+        self.set_theta([0., 0.])
         self.pi.stop()

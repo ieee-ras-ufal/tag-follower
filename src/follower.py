@@ -4,7 +4,6 @@ import rospy
 import numpy
 from tf.msg import tfMessage
 from Driver import Driver
-import time
 
 Ts = 0.1
 
@@ -80,20 +79,16 @@ class Follower:
         rospy.Subscriber('/ar_pose_marker', tfMessage, self.__cb_tag)
         self.theta = numpy.zeros(2)
         self.L = numpy.array([0.093, 0.025, 0.0257, 0.095])
-        self.tag_position = self.position(-numpy.pi/4, -numpy.pi/6)
+        self.tag_position = self.position()
 
 follower = Follower()
 
 # Driver instance
-driver = Driver()
+driver = Driver(follower.theta)
 
 # Registering shutdown hook
 def shutdown_hook():
     driver.closeConn()
-
-# TEST
-driver.set_theta([numpy.pi/9, numpy.pi/9])
-time.sleep(2)
 
 # Main loop
 rospy.on_shutdown(shutdown_hook)
