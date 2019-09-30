@@ -80,7 +80,7 @@ class Follower:
         rospy.Subscriber('/ar_pose_marker', tfMessage, self.__cb_tag)
         self.theta = numpy.zeros(2)
         self.L = numpy.array([0.093, 0.025, 0.0257, 0.095])
-        self.tag_position = self.position([-numpy.pi/4, -numpy.pi/6])
+        self.tag_position = self.position(-numpy.pi/4, -numpy.pi/6)
 
 follower = Follower()
 
