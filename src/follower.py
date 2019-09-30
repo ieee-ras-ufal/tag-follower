@@ -59,7 +59,7 @@ class Follower:
 
     def __init__(self):
         rospy.init_node('follower')
-        rospy.Subscriber('/denso_cube', tfMessage, self.__cb_tag)
+        rospy.Subscriber('/ar_pose_marker', tfMessage, self.__cb_tag)
         self.theta = numpy.zeros(2)
         self.L = numpy.array([0.093, 0.025, 0.0257, 0.095])
         self.tag_position = self.position()
