@@ -18,16 +18,16 @@ class Follower:
 
         return result[0:3]
 
-    def position(self):
-        kine = self.fkm()
+    def position(self, theta_1 = self.theta[0], theta_2 = self.theta[1]):
+        kine = self.fkm(theta_1, theta_2)
 
         return kine[0:3, 3]
 
-    def fkm(self):
-        s1 = numpy.sin(self.theta[0])
-        s2 = numpy.sin(self.theta[1])
-        c1 = numpy.cos(self.theta[0])
-        c2 = numpy.cos(self.theta[1])
+    def fkm(self, theta_1 = self.theta[0], theta_2 = self.theta[1]):
+        s1 = numpy.sin(theta_1)
+        s2 = numpy.sin(theta_2)
+        c1 = numpy.cos(theta_1)
+        c2 = numpy.cos(theta_2)
 
         L1 = self.L[0]
         L2 = self.L[1]
@@ -62,12 +62,13 @@ class Follower:
         rospy.Subscriber('/ar_pose_marker', tfMessage, self.__cb_tag)
         self.theta = numpy.zeros(2)
         self.L = numpy.array([0.093, 0.025, 0.0257, 0.095])
-        self.tag_position = self.position()
+        self.tag_position = self.position(0., 0.)
 
 follower = Follower()
 rate = rospy.Rate(Ts)
 
 driver = Driver()
+driver.set_theta([20, 20])
 
 while not rospy.is_shutdown():
 
