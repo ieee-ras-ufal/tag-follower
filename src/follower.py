@@ -80,7 +80,7 @@ class Follower:
         rospy.Subscriber('/ar_pose_marker', tfMessage, self.__cb_tag)
         self.theta = numpy.zeros(2)
         self.L = numpy.array([0.093, 0.025, 0.0257, 0.095])
-        self.tag_position = self.position()
+        self.tag_position = self.position([-numpy.pi/4, -numpy.pi/6])
 
 follower = Follower()
 
@@ -98,7 +98,6 @@ time.sleep(2)
 # Main loop
 rospy.on_shutdown(shutdown_hook)
 rate = rospy.Rate(1/Ts)
-gain = 1
 while not rospy.is_shutdown():
 
     # Computing feedback control
@@ -106,7 +105,7 @@ while not rospy.is_shutdown():
     dtheta = numpy.dot(numpy.linalg.pinv(follower.jacobian()), error)
 
     # Euler integration
-    theta = follower.theta + gain * dtheta * Ts
+    theta = follower.theta + dtheta * Ts
     
     ## Apply on servo
     driver.set_theta(theta)
