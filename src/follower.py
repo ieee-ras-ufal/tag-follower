@@ -6,7 +6,7 @@ from tf.msg import tfMessage
 from Driver import Driver
 import time
 
-Ts = 10
+Ts = 0.1
 
 class Follower:
 
@@ -54,11 +54,16 @@ class Follower:
 
         return T_0_E
 
-    def jacobian(self):
-        s1 = numpy.sin(self.theta[0])
-        s2 = numpy.sin(self.theta[1])
-        c1 = numpy.cos(self.theta[0])
-        c2 = numpy.cos(self.theta[1])
+    def jacobian(self, theta_1 = None, theta_2 = None):
+        if (theta_1 == None):
+            theta_1 = self.theta[0]
+        if (theta_2 == None):
+            theta_2 = self.theta[1]
+
+        s1 = numpy.sin(theta_1)
+        s2 = numpy.sin(theta_2)
+        c1 = numpy.cos(theta_1)
+        c2 = numpy.cos(theta_2)
 
         L2 = self.L[1]
         L3 = self.L[2]
@@ -75,24 +80,33 @@ class Follower:
         rospy.Subscriber('/ar_pose_marker', tfMessage, self.__cb_tag)
         self.theta = numpy.zeros(2)
         self.L = numpy.array([0.093, 0.025, 0.0257, 0.095])
-        self.tag_position = self.position(0., 0.)
+        self.tag_position = self.position()
 
 follower = Follower()
-rate = rospy.Rate(Ts)
 
+# Driver instance
 driver = Driver()
-driver.set_theta([20, 20])
 
-time.sleep(1)
+# Registering shutdown hook
+def shutdown_hook():
+    driver.closeConn()
 
+# TEST
+driver.set_theta([numpy.pi/9, numpy.pi/9])
+time.sleep(2)
+
+# Main loop
+rospy.on_shutdown(shutdown_hook)
+rate = rospy.Rate(1/Ts)
+gain = 1
 while not rospy.is_shutdown():
 
+    # Computing feedback control
     error = follower.tag_position - follower.position()
-
     dtheta = numpy.dot(numpy.linalg.pinv(follower.jacobian()), error)
 
     # Euler integration
-    theta = follower.theta + dtheta * Ts
+    theta = follower.theta + gain * dtheta * Ts
     
     ## Apply on servo
     driver.set_theta(theta)

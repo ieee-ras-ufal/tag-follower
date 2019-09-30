@@ -8,8 +8,8 @@ class Driver:
     base_limits = [1100, 1900]
     tilt_limits = [1300, 2000]
 
-    base_angles = [-45, 45]
-    tilt_angles = [-30, 30]
+    base_angles = [-numpy.pi/4, numpy.pi/4]
+    tilt_angles = [-numpy.pi/6, numpy.pi/6]
 
     def __mapping(self, value, anglesLimits, limits):
         span = anglesLimits[1] - anglesLimits[0]
