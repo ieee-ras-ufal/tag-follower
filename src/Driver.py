@@ -25,16 +25,16 @@ class Driver:
         return limits[0] + (scaled * (limits[1] - limits[0]))
 
     def set_theta(self, theta):
-        theta1 = self.__mapping(theta[0], base_angles, base_limits)
-        theta2 = self.__mapping(theta[1], tilt_angles, tilt_limits)
+        theta1 = self.__mapping(theta[0], self.base_angles, self.base_limits)
+        theta2 = self.__mapping(theta[1], self.tilt_angles, self.tilt_limits)
 
-        self.pi.set_servo_pulsewidth(BASE_PIN, theta1)
-        self.pi.set_servo_pulsewidth(TILT_PIN, theta2)
+        self.pi.set_servo_pulsewidth(self.BASE_PIN, theta1)
+        self.pi.set_servo_pulsewidth(self.TILT_PIN, theta2)
 
     def __init__(self):
         self.pi = pigpio.pi()
-        self.pi.set_mode(BASE_PIN, pigpio.OUTPUT)
-        self.pi.set_mode(TILT_PIN, pigpio.OUTPUT)
+        self.pi.set_mode(self.BASE_PIN, pigpio.OUTPUT)
+        self.pi.set_mode(self.TILT_PIN, pigpio.OUTPUT)
 
     def closeConn(self):
         self.pi.stop()
