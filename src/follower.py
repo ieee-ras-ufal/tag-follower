@@ -4,6 +4,7 @@ import rospy
 import numpy
 from tf.msg import tfMessage
 from Driver import Driver
+import time
 
 Ts = 10
 
@@ -20,12 +21,22 @@ class Follower:
 
         return result[0:3]
 
-    def position(self, theta_1 = self.theta[0], theta_2 = self.theta[1]):
+    def position(self, theta_1 = None, theta_2 = None):
+        if (theta_1 == None):
+            theta_1 = self.theta[0]
+        if (theta_2 == None):
+            theta_2 = self.theta[1]
+        
         kine = self.fkm(theta_1, theta_2)
 
         return kine[0:3, 3]
 
-    def fkm(self, theta_1 = self.theta[0], theta_2 = self.theta[1]):
+    def fkm(self, theta_1 = None, theta_2 = None):
+        if (theta_1 == None):
+            theta_1 = self.theta[0]
+        if (theta_2 == None):
+            theta_2 = self.theta[1]
+
         s1 = numpy.sin(theta_1)
         s2 = numpy.sin(theta_2)
         c1 = numpy.cos(theta_1)
@@ -71,6 +82,8 @@ rate = rospy.Rate(Ts)
 
 driver = Driver()
 driver.set_theta([20, 20])
+
+time.sleep(1)
 
 while not rospy.is_shutdown():
 
